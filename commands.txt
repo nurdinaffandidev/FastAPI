@@ -1,0 +1,11 @@
+# Installs the FastAPI framework, which is a modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints
+pip install fastapi
+
+# Installs Uvicorn, an ASGI (Asynchronous Server Gateway Interface) web server that's commonly used to serve FastAPI applications in production or development
+pip install uvicorn
+
+# Runs the FastAPI app in the file main.py, with auto-reload enabled for development
+uvicorn main:app --reload
+
+# For pretty colored logging
+pip install rich

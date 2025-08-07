@@ -1,0 +1,71 @@
+In FastAPI, you can **add constraints to path parameters** using standard Python type hints along with `Path` from `fastapi`. This allows you to enforce things like:
+
+* Minimum and maximum values for integers
+* Regex validation for strings
+* Default values and metadata like descriptions
+
+---
+
+### ✅ Syntax: Using `Path`
+
+```python
+from fastapi import FastAPI, Path
+
+app = FastAPI()
+
+@app.get("/items/{item_id}")
+def read_item(
+    item_id: int = Path(..., title="The ID of the item", ge=1, le=100)
+):
+    return {"item_id": item_id}
+```
+
+---
+
+### 🔍 Common Constraints with `Path`
+
+| Constraint        | Description               | Example                                  |
+| ----------------- | ------------------------- | ---------------------------------------- |
+| `ge=...`          | Greater than or equal to  | `ge=1`                                   |
+| `gt=...`          | Greater than              | `gt=0`                                   |
+| `le=...`          | Less than or equal to     | `le=100`                                 |
+| `lt=...`          | Less than                 | `lt=50`                                  |
+| `min_length=...`  | Minimum string length     | `min_length=3`                           |
+| `max_length=...`  | Maximum string length     | `max_length=10`                          |
+| `regex=...`       | Regex pattern for strings | `regex="^[a-zA-Z0-9_-]+$"`               |
+| `title=...`       | Title for docs            | `title="Item ID"`                        |
+| `description=...` | Description for docs      | `description="Must be between 1 and 10"` |
+
+---
+
+### 🔠 String with Regex
+
+```python
+@app.get("/users/{username}")
+def read_user(
+    username: str = Path(..., min_length=3, max_length=20, regex="^[a-zA-Z0-9_-]+$")
+):
+    return {"username": username}
+```
+
+---
+
+### 🛑 Optional Parameters in Path (Rare)
+
+Path parameters **must be required** by default. You **can't** make them optional unless you use **query parameters instead**.
+
+---
+
+### 📘 Example: Combine Multiple Constraints
+
+```python
+@app.get("/orders/{order_id}")
+def get_order(
+    order_id: int = Path(..., title="Order ID", ge=1000, le=9999, description="Must be a 4-digit number")
+):
+    return {"order_id": order_id}
+```
+
+---
+
+Let me know if you want a live example or test it with curl/Postman.

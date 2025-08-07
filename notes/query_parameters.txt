@@ -1,0 +1,103 @@
+In **FastAPI**, **query parameters** are values passed in the **URL after the `?`**, and they’re **automatically parsed** if you define them as function parameters that **aren’t part of the path**.
+
+---
+
+### ✅ Basic Example
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/items/")
+def read_items(skip: int = 0, limit: int = 10):
+    return {"skip": skip, "limit": limit}
+```
+
+* Request: `GET /items/?skip=5&limit=20`
+* Response: `{"skip": 5, "limit": 20}`
+
+---
+
+### 📌 Optional Query Parameters
+
+If you set a **default value**, the parameter becomes **optional**.
+
+```python
+@app.get("/search/")
+def search(q: str = None):
+    return {"query": q}
+```
+
+* `GET /search/` → `{"query": null}`
+* `GET /search/?q=books` → `{"query": "books"}`
+
+---
+
+### 🛠 Adding Validation with `Query`
+
+You can use `Query` from `fastapi` to **add validation**, metadata, and constraints:
+
+```python
+from fastapi import Query
+
+@app.get("/products/")
+def list_products(
+    category: str = Query(..., min_length=3, max_length=20),
+    in_stock: bool = Query(False),
+):
+    return {"category": category, "in_stock": in_stock}
+```
+
+* `category` is **required**
+* `in_stock` is optional and defaults to `False`
+
+---
+
+### 🔍 Query Parameter Constraints
+
+| Constraint             | Description                  | Example               |
+| ---------------------- | ---------------------------- | --------------------- |
+| `min_length`           | Minimum length for strings   | `min_length=3`        |
+| `max_length`           | Maximum length for strings   | `max_length=50`       |
+| `regex`                | Regex pattern                | `regex="^user_"`      |
+| `gt`, `ge`, `lt`, `le` | Numeric comparisons          | `ge=0`, `lt=100`      |
+| `alias`                | Use different parameter name | `alias="productId"`   |
+| `title`, `description` | Metadata for docs            | `title="Search term"` |
+
+---
+
+### 📚 List of Query Parameters
+
+```python
+@app.get("/items/")
+def read_items(tags: list[str] = Query([])):
+    return {"tags": tags}
+```
+
+* `GET /items/?tags=book&tags=tech` → `{"tags": ["book", "tech"]}`
+
+---
+
+### 🧪 Full Example with Constraints
+
+```python
+from fastapi import FastAPI, Query
+
+app = FastAPI()
+
+@app.get("/filter/")
+def filter_items(
+    keyword: str = Query(..., min_length=3, max_length=50, description="Search keyword"),
+    page: int = Query(1, ge=1),
+    size: int = Query(10, le=100)
+):
+    return {"keyword": keyword, "page": page, "size": size}
+```
+
+* `...` = required
+* `GET /filter/?keyword=shoes&page=2&size=50` → valid
+
+---
+
+Would you like an example combining both **path** and **query** parameters?
