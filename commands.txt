@@ -6,6 +6,7 @@ pip install uvicorn
 
 # Runs the FastAPI app in the file main.py, with auto-reload enabled for development
 uvicorn main:app --reload
+uvicorn working:app --reload # for working.py
 
 # For pretty colored logging
 pip install rich
