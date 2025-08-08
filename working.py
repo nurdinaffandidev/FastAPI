@@ -83,39 +83,39 @@ def get_item_by_id(item_id: int = Path(description="The ID of the item you would
 
 '''----- Query parameters [GET] -----'''
 # required query parameter
-# @app.get("/get-item-by-name")
-# def get_item(item_name: str):
-#     for item_id, item in inventory.items():
-#         if item.name.lower() == item_name.lower():
-#             return inventory[item_id]
-#     raise HTTPException(
-#         status_code=status.HTTP_404_NOT_FOUND,
-#         detail="Item name not found."
-#     )
+@app.get("/get-item-by-name-required")
+def get_item_by_name_required(item_name: str):
+    for item_id, item in inventory.items():
+        if item.name.lower() == item_name.lower():
+            return inventory[item_id]
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Item name not found."
+    )
 
 
 # optional query parameter
-# @app.get("/get-item-by-name")
-# # def get_item(item_name: str = None): # works as it is for optional query parameter
-# def get_item(item_name: Optional[str] = None): # following best practices
-#     for item_id, item in inventory.items():
-#         if isinstance(item_name,str): # check str object for .lower() use
-#             if item.name.lower() == item_name.lower():
-#                 return inventory[item_id]
-#         else: # normal equal check
-#             if item.name == item_name:
-#                 return inventory[item_id]
-#     raise HTTPException(
-#         status_code=status.HTTP_404_NOT_FOUND,
-#         detail="Item name not found."
-#     )
+@app.get("/get-item-by-name-optional")
+# def get_item(item_name: str = None): # works as it is for optional query parameter
+def get_item_by_name_optional(item_name: Optional[str] = None): # following best practices
+    for item_id, item in inventory.items():
+        if isinstance(item_name,str): # check str object for .lower() use
+            if item.name.lower() == item_name.lower():
+                return inventory[item_id]
+        else: # normal equal check
+            if item.name == item_name:
+                return inventory[item_id]
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Item name not found."
+    )
 
 
 # multiple query parameters
-@app.get("/get-item-by-name")
+@app.get("/get-item-by-name-multiple")
 # def get_item(item_name: Optional[str] = None, add_query: int): # result in `non-default parameter follows default parameter`
 # def get_item(add_query: int, item_name: Optional[str] = None ): # fix by rearranging default parameter before non-default parameter
-def get_item(*, item_name: Optional[str] = None, add_query: int): # fix by adding asterisk as first arg - indicating let function accept unlimited positional args followed by keyword args
+def get_item_by_name_multiple(*, item_name: Optional[str] = None, add_query: int): # fix by adding asterisk as first arg - indicating let function accept unlimited positional args followed by keyword args
     logger.info(f"additional_query= {add_query}")
     for item_id, item in inventory.items():
         if isinstance(item_name, str): # check str object for .lower() use
